@@ -1,0 +1,22 @@
+{
+  "name": "lupi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jest.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://everything: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@github.com/PhillipFitzsimmons/lupi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PhillipFitzsimmons/lupi/issues"
+  },
+  "homepage": "https://github.com/PhillipFitzsimmons/lupi#readme",
+  "_moduleAliases": {
+    "lupi-dal": "packages/lupi-dal"
+  }
+}

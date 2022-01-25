@@ -1,0 +1,18 @@
+{
+  "Parameters" : {
+    "Environment" : "prod",
+    "DomainNameString" : "lupi.studio",
+    "ApiDomain": "api.lupi.studio",
+    "ApiVersion" : "v1",
+    "DynamoDBEndpoint" : "::",
+    "RsvpUrl" : "https://www.lupi.studio/rsvp",    
+    "PasswordResetUrl" : "https://www.lupi.studio",
+    "WebAliasWWW": "www.lupi.studio",
+    "WebAliasBase": "lupi.studio",
+    "ImageServerDomain": "images.lupi.studio",
+    "GoogleRedirectUri": "https://api.lupi.studio/v1/googleauth",
+    "WebsocketDomain": "websocket.lupi.studio",
+    "Home": "https://www.lupi.studio",
+    "CookieHome": ".lupi.studio"
+  }
+}

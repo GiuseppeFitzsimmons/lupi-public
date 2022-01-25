@@ -1,0 +1,1732 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: "FlashGang infrastructure as code template\n"
+Parameters:
+  PointlessParam:
+    Description: A pointless param
+    Type: String
+    Default: pointless
+  ApiDomain:
+    Description: The domain name
+    Type: String
+    Default: lupi-api.lupi.studio
+  ApiVersion:
+    Type: String
+    Default: v1
+  DynamoDBEndpoint:
+    Type: String
+    Default: http://localhost:8000
+  S3Endpoint:
+    Type: String
+    Default: https://s3.us-east-1.amazonaws.com
+  RsvpUrl:
+    Type: String
+    Default: http://localhost:3000/rsvp
+  PasswordResetUrl:
+    Type: String
+    Default: http://localhost:3000
+  WebServerDomain:
+    Type: String
+    Default: www-lupi.lupi.studio
+  WebAliasBase:
+    Type: String
+    Default: lupi.studio
+  WebsocketDomain:
+    Type: String
+    Default: lupi-websocket.lupi.studio
+  GoogleRedirectUri:
+    Type: String
+    Default: https://lupi-api.lupi.studio/v1/googleauth
+  Home:
+    Type: String
+    Default: https://www-lupi.lupi.studio
+  CookieHome:
+    Type: String
+    Default: .lupi.studio
+  SmtpUserName:
+    Type: String
+    Default: '::'
+  SmtpPassword:
+    Type: String
+    Default: '::'
+  AccessKeyId:
+    Type: String
+    Default: ''
+  SecretAccessKey:
+    Type: String
+    Default: ''
+  SigningSecret:
+    Type: String
+    Default: '::'
+  Environment:
+    Type: String
+    Default: dev
+  DateTime:
+    Type: String
+    Default: datetime
+Globals:
+  Function:
+    Timeout: 18
+    Runtime: nodejs14.x
+    Handler: index.handler
+    Layers:
+    - Ref: CommonLayer
+    Environment:
+      Variables:
+        ENVIRONMENT:
+          Ref: Environment
+        REGION: us-east-1
+        SIGNING_SECRET:
+          Ref: SigningSecret
+        HASHING_SECRET:
+          Ref: SigningSecret
+        SMTP_USER_NAME:
+          Ref: SmtpUserName
+        SMTP_PASSWORD:
+          Ref: SmtpPassword
+        MEMBERSHIP_SENDMAIL_ADDRESS: membership@flashgang.io
+        SMTP_SERVER: email-smtp.us-east-1.amazonaws.com
+        RSVP_URL:
+          Ref: RsvpUrl
+        PASSWORD_RESET:
+          Ref: PasswordResetUrl
+        S3_ENDPOINT:
+          Ref: S3Endpoint
+        GOOGLE_REDIRECT_URI:
+          Ref: GoogleRedirectUri
+        HOME:
+          Ref: Home
+        COOKIE_HOME:
+          Ref: CookieHome
+        ACCESS_KEY_ID:
+          Ref: AccessKeyId
+        SECRET_ACCESS_KEY:
+          Ref: SecretAccessKey
+        POINTLESS:
+          Ref: PointlessParam
+Resources:
+  UserLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/5c69eea8cbfb78311c09f460cf58ca85
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/user
+            Method: any
+  TokenLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/a028acf6e6e8191f70c811b8485c0cc7
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/token
+            Method: any
+  BrandLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/261745da6176df5f9ae96b9720a65742
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/brand
+            Method: any
+  CollectionLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/47a79a54c6e980fec7fdace16c264b87
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/collection
+            Method: any
+  RoleLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/fd66ba2282a05367193f38886d5a7309
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/role
+            Method: any
+  ProductLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/0d7ba581875997cac12bd8f531d86c0d
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/product
+            Method: any
+  VariationLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/fae29393d432ebc52059b005706056e7
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/variation
+            Method: any
+  ProductSizeLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/03aaddfa0042bc362b8b31f295d5cf5b
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/productsize
+            Method: any
+  SizeLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/066e97cfed152d160fcef1f038c57763
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/size
+            Method: any
+  SupplierLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/e32e0345caf8e36e2be29c871ca4ac3c
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/supplier
+            Method: any
+  ContactLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/a21a16d6a63ca3bf619d329c7c085f20
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/contact
+            Method: any
+  FabricantLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/c6a17ffa4ae00a664caaa98aa012b1fa
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/fabricant
+            Method: any
+  PerUnitProductionCostLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/e9f09c78d2589815ae0c00634d1391a7
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/perunitproductioncost
+            Method: any
+  CustomerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/d6aeccf8707ee2dbbd866e68b1ba3f15
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/customer
+            Method: any
+  OrderLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/01035fb67e6151dee83e8474d83321ea
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/order
+            Method: any
+  OrderVariationLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/6b1c0b32b6b7c0c19748bc3e6a757980
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/ordervariation
+            Method: any
+  FabricLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/028fc4a6ee29fe72b12b29f5c9609f6d
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/fabric
+            Method: any
+  SignupLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/bb55ab0b4290f1ca6cbb10b676f9afb0
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/signup
+            Method: any
+  BrandUserLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/8511ef27f49656c56f918189c225eb35
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/branduser
+            Method: any
+  FournitureLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/9076ec5b070d141c0d412d9ee103599d
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/fourniture
+            Method: any
+  SignedUrlLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/d98514747c2448691d42f71bbc7c4ebc
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/signedurl
+            Method: any
+  ReactDeployerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://wwdd-build-bucket-us-east-1/5db7552e2a0b8b591b30fd370d4045fe
+      Handler: index.handler
+      Timeout: 360
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+  ReactDeployer:
+    Type: Custom::ReactDeployer
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+        - ReactDeployerLambda
+        - Arn
+      Bucket:
+        Fn::Sub: lupi-web-bucket-${Environment}
+      TargetDirectory: lupi
+      DateTime:
+        Ref: DateTime
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName:
+        Fn::Sub: CommonLayer-${Environment}
+      Description: A few shareable code snippets that should work this time
+      ContentUri: s3://wwdd-build-bucket-us-east-1/ef7fdd81820005ce2ca779ef3f081c57
+      CompatibleRuntimes:
+      - nodejs14.x
+      LicenseInfo: MIT
+      RetentionPolicy: Delete
+  BrandTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiBrand-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiUser-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  RoleTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiRole-${Environment}
+      KeySchema:
+      - AttributeName: userId
+        KeyType: HASH
+      - AttributeName: brandId
+        KeyType: RANGE
+      AttributeDefinitions:
+      - AttributeName: userId
+        AttributeType: S
+      - AttributeName: brandId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: brand_index
+        KeySchema:
+        - AttributeName: brandId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  CollectionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiCollection-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: brandId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: brand_index
+        KeySchema:
+        - AttributeName: brandId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  ProductTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiProduct-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: collectionId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: collection_index
+        KeySchema:
+        - AttributeName: collectionId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  VariationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiVariation-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: productId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: product_index
+        KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  VariationComponentTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiVariationComponent-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: variationId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: variation_index
+        KeySchema:
+        - AttributeName: variationId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  VariationSizeModifierTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiVariationSizeModifier-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: variationComponentId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: variationcomponent_index
+        KeySchema:
+        - AttributeName: variationComponentId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  ProductSizeTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiProductSize-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: productId
+        AttributeType: S
+      - AttributeName: sizeId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: product_index
+        KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: size_index
+        KeySchema:
+        - AttributeName: sizeId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  SizeTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiSize-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: productSizeId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: productsize_index
+        KeySchema:
+        - AttributeName: productSizeId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  CompositionTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiComposition-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: productId
+        AttributeType: S
+      - AttributeName: variationId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: product_index
+        KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: variation_index
+        KeySchema:
+        - AttributeName: variationId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  FabricTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiFabric-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: supplierId
+        AttributeType: S
+      - AttributeName: compositionId
+        AttributeType: S
+      - AttributeName: brandId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: supplier_index
+        KeySchema:
+        - AttributeName: supplierId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: composition_index
+        KeySchema:
+        - AttributeName: compositionId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: brand_index
+        KeySchema:
+        - AttributeName: brandId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  FournitureTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiFourniture-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: supplierId
+        AttributeType: S
+      - AttributeName: brandId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: supplier_index
+        KeySchema:
+        - AttributeName: supplierId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: brand_index
+        KeySchema:
+        - AttributeName: brandId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  SupplierTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiSupplier-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: fabricId
+        AttributeType: S
+      - AttributeName: contactId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: fabric_index
+        KeySchema:
+        - AttributeName: fabricId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: contact_index
+        KeySchema:
+        - AttributeName: contactId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  ContactTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiContact-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: supplierId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: supplier_index
+        KeySchema:
+        - AttributeName: supplierId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  FabricantTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiFabricant-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: contactId
+        AttributeType: S
+      - AttributeName: perUnitProductionCostId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: contact_index
+        KeySchema:
+        - AttributeName: contactId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: perunitproductioncost_index
+        KeySchema:
+        - AttributeName: perUnitProductionCostId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  PerUnitProductionCostTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiPerUnitProductionCost-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: fabricantId
+        AttributeType: S
+      - AttributeName: productId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: fabricant_index
+        KeySchema:
+        - AttributeName: fabricantId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: product_index
+        KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  CustomerTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiCustomer-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: contactId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: contact_index
+        KeySchema:
+        - AttributeName: contactId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  OrderTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiOrder-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: customerId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: customer_index
+        KeySchema:
+        - AttributeName: customerId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  OrderVariationTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName:
+        Fn::Sub: LupiOrderVariation-${Environment}
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: orderId
+        AttributeType: S
+      - AttributeName: variationId
+        AttributeType: S
+      GlobalSecondaryIndexes:
+      - IndexName: order_index
+        KeySchema:
+        - AttributeName: orderId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      - IndexName: variation_index
+        KeySchema:
+        - AttributeName: variationId
+          KeyType: HASH
+        Projection:
+          ProjectionType: ALL
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      BillingMode: PROVISIONED
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        Fn::Join:
+        - '-'
+        - - Ref: AWS::StackName
+          - LambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+            - apigateway.amazonaws.com
+            - events.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - WriteLogPolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:log-group:/aws/lambda/*:*:*
+      - PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - InvokeTokenLambda
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - lambda:InvokeFunction
+            Resource: '*'
+      - PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - Iam
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action: iam:GetRolePolicy
+            Resource: '*'
+      - PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - database
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:*
+            Resource: '*'
+      - PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - S3Policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:*
+            Resource:
+            - arn:aws:s3:::*
+            - arn:aws:s3:::*/*
+      - PolicyName:
+          Fn::Join:
+          - '-'
+          - - Ref: AWS::StackName
+            - websocket
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - execute-api:*
+            Resource:
+            - '*'
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName:
+        Fn::Sub: lupi-web-bucket-${Environment}
+      WebsiteConfiguration:
+        ErrorDocument: index.html
+        IndexDocument: index.html
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          MaxAge: '300'
+          AllowedMethods:
+          - POST
+          - GET
+          - PUT
+          AllowedOrigins:
+          - '*'
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn:
+    - S3Bucket
+    Properties:
+      Bucket:
+        Ref: S3Bucket
+      PolicyDocument:
+        Statement:
+        - Sid: PublicReadForS3Website
+          Action:
+          - s3:GetObject
+          - s3:PutObject
+          Effect: Allow
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Ref: S3Bucket
+              - /*
+          Principal: '*'
+  WebsiteDNSName:
+    Type: AWS::Route53::RecordSet
+    DependsOn:
+    - WebsiteCloudfront
+    Properties:
+      HostedZoneName: lupi.studio.
+      Name:
+        Ref: WebServerDomain
+      Type: A
+      AliasTarget:
+        EvaluateTargetHealth: false
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName:
+          Fn::GetAtt:
+          - WebsiteCloudfront
+          - DomainName
+  WebsiteCloudfront:
+    Type: AWS::CloudFront::Distribution
+    DependsOn:
+    - S3Bucket
+    Properties:
+      DistributionConfig:
+        Comment: Cloudfront Distribution pointing to S3 bucket
+        Origins:
+        - Id: S3Origin
+          OriginPath: /lupi
+          DomainName:
+            Fn::Select:
+            - 2
+            - Fn::Split:
+              - /
+              - Fn::GetAtt:
+                - S3Bucket
+                - WebsiteURL
+          CustomOriginConfig:
+            HTTPPort: '80'
+            HTTPSPort: '443'
+            OriginProtocolPolicy: http-only
+        - Id: LambdaOrigin
+          OriginPath: /Stage
+          DomainName:
+            Fn::Sub: ${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com
+          CustomOriginConfig:
+            HTTPPort: '80'
+            HTTPSPort: '443'
+            OriginProtocolPolicy: match-viewer
+        - Id: S3ImageOrigin
+          OriginPath: /images
+          DomainName:
+            Fn::Select:
+            - 2
+            - Fn::Split:
+              - /
+              - Fn::GetAtt:
+                - S3Bucket
+                - WebsiteURL
+          CustomOriginConfig:
+            HTTPPort: '80'
+            HTTPSPort: '443'
+            OriginProtocolPolicy: http-only
+        Enabled: true
+        HttpVersion: http2
+        DefaultRootObject: ''
+        Aliases:
+        - Ref: WebServerDomain
+        CustomErrorResponses:
+        - ErrorCode: 404
+          ResponseCode: 200
+          ResponsePagePath: /index.html
+        DefaultCacheBehavior:
+          AllowedMethods:
+          - GET
+          - HEAD
+          - OPTIONS
+          - PUT
+          - POST
+          - PATCH
+          - DELETE
+          Compress: true
+          TargetOriginId: S3Origin
+          ForwardedValues:
+            QueryString: true
+            Cookies:
+              Forward: all
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+        CacheBehaviors:
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/brand
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/collection
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/contact
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/customer
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/fabric
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/fabricant
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/order
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/ordervariation
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/perunitproductioncost
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/productsize
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/role
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/signerurl
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/signup
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/size
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/supplier
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/token
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/user
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/variation
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: LambdaOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /v1/branduser
+        - AllowedMethods:
+          - DELETE
+          - GET
+          - HEAD
+          - OPTIONS
+          - PATCH
+          - POST
+          - PUT
+          TargetOriginId: S3ImageOrigin
+          ForwardedValues:
+            QueryString: 'true'
+            Cookies:
+              Forward: all
+            Headers:
+            - Authorization
+          ViewerProtocolPolicy: allow-all
+          MinTTL: '0'
+          MaxTTL: '0'
+          DefaultTTL: '0'
+          PathPattern: /images/*
+        PriceClass: PriceClass_100
+        ViewerCertificate:
+          AcmCertificateArn: arn:aws:acm:us-east-1:209544401946:certificate/34ef9ed6-e9c1-44f1-b59b-599ca44d1983
+          SslSupportMethod: sni-only
+Outputs:
+  ClientUrl:
+    Value:
+      Ref: Home
+  GatewayUrl:
+    Value:
+      Fn::Sub: https://${ApiDomain}/${ApiVersion}
+  StaticDeployer:
+    Value:
+      Fn::GetAtt:
+      - ReactDeployer
+      - globalErrorMessage

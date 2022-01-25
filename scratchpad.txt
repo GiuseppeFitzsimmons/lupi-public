@@ -1,0 +1,1 @@
+https://lupi-test.auth.us-east-1.amazoncognito.com/oauth2/authorize

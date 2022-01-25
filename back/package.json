@@ -1,0 +1,21 @@
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "jest.config.js",
+  "dependencies": {
+    "axios": "^0.25.0",
+    "jest": "^26.6.3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.14.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd ..; node server-deploy.js --local true",
+    "start-windows": "cd.. && node server-deploy.js --local true"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC"
+}

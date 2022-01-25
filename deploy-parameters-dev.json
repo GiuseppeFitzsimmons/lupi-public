@@ -1,0 +1,15 @@
+{
+  "Parameters" : {
+    "Environment" : "dev",
+    "ApiDomain": "lupi-api-dev.lupi.studio",
+    "ApiVersion" : "v1",
+    "DynamoDBEndpoint" : "::",
+    "RsvpUrl" : "https://lupi.lupi.studio/rsvp",    
+    "PasswordResetUrl" : "https://lupi-dev.lupi.studio",
+    "WebAliasWWW": "www-lupi-dev.lupi.studio",
+    "WebAliasBase": "lupi-dev.lupi.studio",
+    "GoogleRedirectUri": "https://lupi-api-dev.lupi.studio/v1/googleauth",
+    "Home": "https://lupi-dev.lupi.studio",
+    "CookieHome": ".lupi.studio"
+  }
+}

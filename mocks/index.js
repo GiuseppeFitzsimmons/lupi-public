@@ -191,10 +191,9 @@ const setup = async()=>{
     //console.log('ERRORTAG',orderVariation)
 
     let role=Object.assign(Role.template, Role.roles.ADMIN);
-    console.log('user', user)
     role.userId=user.id;
     role.brandId=brand.id;
-    Role.save(role);
+    await Role.save(role);
 
     let tokens=tokenUtility.generateNewPair(User.template.id, '*', [role]);
 

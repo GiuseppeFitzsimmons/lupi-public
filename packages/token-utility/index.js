@@ -110,6 +110,7 @@ function getScopesForBrand(token, brandId) {
         allowedScopes:[],
         disallowedScope:[]
     }
+    console.log('tokenlog', token)
     token.roles.forEach(role => {
         if (role.brandId===brandId) {
             if (role.allowedScopes) {

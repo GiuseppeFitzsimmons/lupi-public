@@ -18,5 +18,8 @@
   "homepage": "https://github.com/PhillipFitzsimmons/lupi#readme",
   "_moduleAliases": {
     "lupi-dal": "packages/lupi-dal"
+  },
+  "dependencies": {
+    "jest": "26.5.0"
   }
 }

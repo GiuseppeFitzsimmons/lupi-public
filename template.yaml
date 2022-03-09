@@ -335,6 +335,18 @@ Resources:
           Properties:
             Path: /v1/fourniture
             Method: any
+  AllLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: back/all/
+      Role: 
+        !GetAtt LambdaExecutionRole.Arn
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /v1/all
+            Method: any
 
   SignedUrlLambda:
     Type: AWS::Serverless::Function
